@@ -6,6 +6,7 @@ import datetime as dt
 import pandas as pd
 import numpy as np
 import os
+from nse_listed_companies import get_company_name
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -28,7 +29,7 @@ def barplot(x,y,title=None):
     plt.savefig(f"Plots/{title}.png")
     print(f"{title} saved in Plots directory")
     
-def dividend_history_analysis(ticker,export=False,save_plots=False):
+def dividend_history_analysis(symbol,index_symbol='NS',export=False,save_plots=False):
     '''
     This function analyses the dividend history of the company.
     To downlaod the data enable epxport : 
@@ -38,6 +39,7 @@ def dividend_history_analysis(ticker,export=False,save_plots=False):
     '''
     try:
         # creating a ticker object
+        ticker = f"{symbol}.{index_symbol}"
         tckr = yf.Ticker(ticker)
         dividend_series = tckr.dividends
         if len(dividend_series)==0:
@@ -57,9 +59,9 @@ def dividend_history_analysis(ticker,export=False,save_plots=False):
             max_dividend_year = dividend_year[dividend_year['Dividends']==max_dividend_yearwise].index[0]
     
             # Printing the analysis
-            print(f"{ticker} has given highest dividend of INR{max_dividend} on {max_dividend_date}")
-            print(f"{ticker} has given a total dividend of INR{np.round(total_dividend,3)} from {dividend_df['Date'][0]} till {dividend_df['Date'][len(dividend_df)-1]}")
-            print(f"{ticker} has given maximum dividend of INR{max_dividend_yearwise} in the Year {max_dividend_year}\n")
+            print(f"{get_company_name(symbol)}({ticker}) has given highest dividend of INR{np.round(max_dividend,3)} on {max_dividend_date}")
+            print(f"{get_company_name(symbol)}({ticker}) has given a total dividend of INR{np.round(total_dividend,3)} from {dividend_df['Date'][0]} till {dividend_df['Date'][len(dividend_df)-1]}")
+            print(f"{get_company_name(symbol)}({ticker}) has given maximum dividend of INR{np.round(max_dividend_yearwise,3)} in the Year {max_dividend_year}\n")
     
             # plotting the graphs
             if save_plots:
@@ -67,8 +69,8 @@ def dividend_history_analysis(ticker,export=False,save_plots=False):
                 if not os.path.exists(directory):
                     os.makedirs(directory)
                     print(f"{directory} created to save the plots")
-                barplot(dividend_df.Date,dividend_df.Dividends,title=f"Datewise Dividend History of {ticker}")
-                barplot(dividend_year.index,dividend_year.Dividends,title=f"Yearwise Dividend History of {ticker}")
+                barplot(dividend_df.Date,dividend_df.Dividends,title=f"Datewise Dividend History of {get_company_name(symbol)}({ticker})")
+                barplot(dividend_year.index,dividend_year.Dividends,title=f"Yearwise Dividend History of {get_company_name(symbol)}({ticker})")
             if export:
                 directory=f"Export/"
                 if not os.path.exists(directory):
@@ -83,15 +85,17 @@ def dividend_history_analysis(ticker,export=False,save_plots=False):
         print(f'Error Occured ...........\n{e}')     
 
 # for a single company
-# dividend_history_analysis('TECHM.NS',export=True,save_plots=True)
+dividend_history_analysis('IOC',export=True,save_plots=True)
+# dividend_history_analysis('IOC',save_plots=True)
 
 # for the list of companies
-list_of_tickers = ['TECHM.NS','CAMPUS.NS','VEDL.NS',
-'AMBUJACEM.NS','DHAMPURSUG.NS','DLF.NS',
-'ICICIBANK.NS','RENUKA.NS','TRIVENI.NS',
-'CDSL.NS','TATAPOWER.NS','TATAMOTORS.NS','ZOMATO.NS','WIPRO.NS']
+# list_of_tickers = ['TECHM','CAMPUS','VEDL',
+# 'AMBUJACEM','DHAMPURSUG','DLF',
+# 'ICICIBANK','RENUKA','TRIVENI',
+# 'CDSL','TATAPOWER','TATAMOTORS','ZOMATO','WIPRO']
 
-for tickers in list_of_tickers:
-    dividend_history_analysis(tickers,save_plots=True)
+# for tickers in list_of_tickers:
+#     dividend_history_analysis(tickers,save_plots=True)
+
 
 
