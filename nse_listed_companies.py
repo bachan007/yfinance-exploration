@@ -7,6 +7,7 @@ This file contains all the NSE listed companies information.
 import pandas as pd
 import numpy as np
 import os
+from Base import barplot
 
 equity_df = pd.read_csv(os.path.join(os.path.abspath(os.getcwd()),'files/EQUITY_L.csv'))
 
@@ -19,6 +20,9 @@ equity_df.columns = cleaned_cols
 
 equity_df['NAME OF COMPANY'] = equity_df['NAME OF COMPANY'].apply(lambda x : x.title().strip())
 equity_df['SYMBOL'] = equity_df['SYMBOL'].apply(lambda x : x.upper().strip())
+equity_df['DATE OF LISTING']=pd.to_datetime(equity_df['DATE OF LISTING'])
+equity_df['YEAR OF LISTING']=equity_df['DATE OF LISTING'].dt.year
+equity_df['MONTH OF LISTING']=equity_df['DATE OF LISTING'].dt.month_name()
 
 
 def get_symbol(company_name):
@@ -29,29 +33,33 @@ def get_symbol(company_name):
         return sym
     else:
         print('Data not Found')
-
-
-def get_company_name(symbol):
-    '''
-    This function takes the symbol of company as input and returns the name of the company
-    '''
-    symbol = symbol.strip().upper()
-    temp_df=equity_df[equity_df['SYMBOL']==symbol]
-    if temp_df.shape[0]!=0:
-        cn = temp_df['NAME OF COMPANY'].values[0]
-        return cn
-    else:
-        print(f'Data not Found for {symbol}')
         return None
 
 
-def get_face_value_and_listing_date(symbol):
+def get_info(info_of,symbol):
+    '''
+    This function takes the symbol of company as input and returns the specific info of the company
+    info_of can be ['NAME OF COMPANY','FACE VALUE','DATE OF LISTING','SERIES','PAID UP VALUE', 'MARKET LOT', 'ISIN NUMBER']
+    '''
     symbol = symbol.strip().upper()
     temp_df=equity_df[equity_df['SYMBOL']==symbol]
     if temp_df.shape[0]!=0:
-        fv = temp_df['FACE VALUE'].values[0]
-        ld = temp_df['DATE OF LISTING'].values[0]
-        return fv,ld
+        info = temp_df[info_of].values[0]
+        print(f'{info_of} of {symbol} is : {info}')
+        return info
     else:
-        print('Data not Found')
+        print(f'{info_of} Data not Found for {symbol}')
+        return None
 
+
+def yearwise_count_of_listing():
+    '''
+    This function returns the number of companies listed in a particular year 
+    '''
+    yearwise_count = equity_df.groupby(['YEAR OF LISTING'])['SYMBOL'].count().reset_index()
+    yearwise_count['Count of Companies'] = yearwise_count['SYMBOL']
+    barplot(yearwise_count['YEAR OF LISTING'],yearwise_count['Count of Companies'])
+    return None
+
+if __name__ == '__main__':
+    yearwise_count_of_listing()
