@@ -24,18 +24,24 @@ def barplot(x,y,title=None):
     addlabels(x,y)
     plt.xticks(rotation=90)
     plt.title(title)
-    plt.show()
+    # plt.show()
+    plt.savefig(f"Plots/{title}.png")
+    print(f"{title} saved in Plots directory")
     
-def dividend_history_analysis(ticker):
+def dividend_history_analysis(ticker,export=False,save_plots=False):
     '''
-    This function analyses the history of the company
+    This function analyses the dividend history of the company.
+    To downlaod the data enable epxport : 
+    export=True
+    To save the plots of the dividend performance of the company enable save_plots:
+    save_plots=True
     '''
     try:
         # creating a ticker object
         tckr = yf.Ticker(ticker)
         dividend_series = tckr.dividends
         if len(dividend_series)==0:
-            print(f'No Dividend Record found for {ticker}')
+            print(f'No Dividend Record found for {ticker}\n')
         else:
             # history of the dividend
             dividend_df = dividend_series.to_frame().reset_index()
@@ -56,12 +62,36 @@ def dividend_history_analysis(ticker):
             print(f"{ticker} has given maximum dividend of INR{max_dividend_yearwise} in the Year {max_dividend_year}\n")
     
             # plotting the graphs
-            barplot(dividend_df.Date,dividend_df.Dividends,title=f"Datewise Dividend History of {ticker}")
-            barplot(dividend_year.index,dividend_year.Dividends,title=f"Yearwise Dividend History of {ticker}")
+            if save_plots:
+                directory='Plots'
+                if not os.path.exists(directory):
+                    os.makedirs(directory)
+                    print(f"{directory} created to save the plots")
+                barplot(dividend_df.Date,dividend_df.Dividends,title=f"Datewise Dividend History of {ticker}")
+                barplot(dividend_year.index,dividend_year.Dividends,title=f"Yearwise Dividend History of {ticker}")
+            if export:
+                directory=f"Export/"
+                if not os.path.exists(directory):
+                    os.makedirs(directory)
+                    print(f"{directory} Created to export the data\n")
+                if not os.path.exists(f"Export/{ticker}.csv"):
+                    dividend_df.to_csv(f"Export/{ticker}.csv",index=False)
+                    print(f"Exported : Export/{ticker}.csv\n")
+                else:
+                    print(f'Data is already present for {ticker}\n')
     except Exception as e:
         print(f'Error Occured ...........\n{e}')     
 
+# for a single company
+# dividend_history_analysis('TECHM.NS',export=True,save_plots=True)
 
-list_of_tickers = ['TECHM.NS','CAMPUS.NS','VEDL.NS','AMBUJACEM.NS']
+# for the list of companies
+list_of_tickers = ['TECHM.NS','CAMPUS.NS','VEDL.NS',
+'AMBUJACEM.NS','DHAMPURSUG.NS','DLF.NS',
+'ICICIBANK.NS','RENUKA.NS','TRIVENI.NS',
+'CDSL.NS','TATAPOWER.NS','TATAMOTORS.NS','ZOMATO.NS','WIPRO.NS']
+
 for tickers in list_of_tickers:
-    dividend_history_analysis(tickers)
+    dividend_history_analysis(tickers,save_plots=True)
+
+
