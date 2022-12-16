@@ -36,21 +36,27 @@ def dividend_history_analysis(symbol,index_symbol='NS',export=False,save_plots=F
             dividend_df = dividend_series.to_frame().reset_index()
             max_dividend = dividend_series.max()
             max_dividend_date = (dividend_series[dividend_series==max_dividend].index[0]).date().strftime('%Y-%b-%d')
-            dividend_df['Date'] = dividend_df['Date'].apply(date_format)
-            dividend_df['Year'] = dividend_df['Date'].apply(lambda x : x.split('-')[0])
-            dividend_df['Month'] = dividend_df['Date'].apply(lambda x : x.split('-')[1])
+            dividend_df['Date'] = pd.to_datetime(dividend_df['Date'])
+            dividend_df['Quarter'] = dividend_df['Date'].dt.quarter.astype(str)
+            dividend_df['Year'] = dividend_df['Date'].dt.year.astype(str)
+            dividend_df['Month'] = dividend_df['Date'].dt.month_name()
+            dividend_df['Date'] = dividend_df['Date'].dt.date
             total_dividend = dividend_df['Dividends'].sum()
-    
+            
             dividend_year = dividend_df.groupby(['Year']).sum()
             max_dividend_yearwise = dividend_year.max()[0]
             max_dividend_year = dividend_year[dividend_year['Dividends']==max_dividend_yearwise].index[0]
+
+            dividend_quarter = dividend_df.groupby(['Quarter']).sum()
+            max_dividend_quarterwise = dividend_quarter.max()[0]
+            max_dividend_quarter = dividend_quarter[dividend_quarter['Dividends']==max_dividend_quarterwise].index[0]
 
             company_name = get_info('NAME OF COMPANY',symbol)
             # Printing the analysis
             print(f"{company_name}({ticker}) has given highest dividend of INR{np.round(max_dividend,3)} on {max_dividend_date}")
             print(f"{company_name}({ticker}) has given a total dividend of INR{np.round(total_dividend,3)} from {dividend_df['Date'][0]} till {dividend_df['Date'][len(dividend_df)-1]}")
-            print(f"{company_name}({ticker}) has given maximum dividend of INR{np.round(max_dividend_yearwise,3)} in the Year {max_dividend_year}\n")
-    
+            print(f"{company_name}({ticker}) has given maximum dividend of INR{np.round(max_dividend_yearwise,3)} in the Year {max_dividend_year}")
+            print(f"{company_name}({ticker}) has announced maximum dividend of INR{np.round(max_dividend_quarterwise,3)} in the month of {max_dividend_quarter}\n")
             # plotting the graphs
             if save_plots:
                 directory='Plots'
@@ -59,6 +65,8 @@ def dividend_history_analysis(symbol,index_symbol='NS',export=False,save_plots=F
                     print(f"{directory} created to save the plots")
                 barplot(dividend_df.Date,dividend_df.Dividends,title=f"Datewise Dividend History of {company_name}({ticker})")
                 barplot(dividend_year.index,dividend_year.Dividends,title=f"Yearwise Dividend History of {company_name}({ticker})")
+                barplot(dividend_quarter.index,dividend_quarter.Dividends,title=f"Quarterwise Dividend History of {company_name}({ticker})")
+            
             if export:
                 directory=f"Export/"
                 if not os.path.exists(directory):
@@ -92,6 +100,5 @@ random.shuffle(symbol_list)
 for comp in symbol_list[0:10]:
     print(comp)
     dividend_history_analysis(comp,save_plots=True,export=True)
-    print(comp)
 
 

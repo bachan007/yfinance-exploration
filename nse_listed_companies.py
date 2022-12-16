@@ -26,6 +26,11 @@ equity_df['MONTH OF LISTING']=equity_df['DATE OF LISTING'].dt.month_name()
 
 
 def get_symbol(company_name):
+    '''
+    This function checks whether the company name is present in stocks list provided by NSEINDIA
+    or not. If the name is correct and present int he list, then it return the symbol or ticker 
+    of the company.
+    '''
     company_name=company_name.title().strip()
     temp_df=equity_df[equity_df['NAME OF COMPANY']==company_name]
     if temp_df.shape[0]!=0:
