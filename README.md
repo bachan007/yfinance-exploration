@@ -14,7 +14,8 @@ Install the required libraries using
 run the scripts using :
 > python3 script_name.py
 
-<br \>
 ### Here, i will explain the functionality for every script.
 
 #### Explanation for dividend-analysis.py
+
+In this file i am analysing the dividend history of the the stocks.
