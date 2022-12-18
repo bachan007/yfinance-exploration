@@ -4,15 +4,15 @@ In this project i am going to write multiple scripts to get the information abou
 
 For running the scripts, you need python 3.
 Simply clone the project and create a virtual environment using
-python3 -m venv 'path of environment'
+> python3 -m venv 'path of environment'
 
 and activate the virtual environment
 
 Install the required libraries using 
-pip install -r requirements.txt
+> pip install -r requirements.txt
 
 run the scripts using :
-python3 script_name.py
+> python3 script_name.py
 
 
 Here, i will explain the functionality for every script.
