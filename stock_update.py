@@ -4,7 +4,9 @@ from data_to_pdf import info_to_pdf
 from company_info import company_info_to_table
 from dividend_analysis import dividend_history_analysis
 from data_to_pdf import info_to_pdf
-symbol='IOC'
+
+
+symbol='TECHM'
 
 def stock_info(symbol,to_pdf=False,to_email=False,receiver_email=None):
     '''
@@ -22,5 +24,5 @@ def stock_info(symbol,to_pdf=False,to_email=False,receiver_email=None):
         print("To get this data into PDF format over email set to_pdf=True and to_email=True and provide email")
 
 if __name__=="__main__":
-    stock_info('IOC',to_pdf=True)
+    stock_info(symbol,to_pdf=True)
     

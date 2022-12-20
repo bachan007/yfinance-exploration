@@ -61,15 +61,19 @@ def info_to_pdf(df,symbol,index_symbol='NS'):
     pdf.add_page()
     pdf.set_font('Arial', 'B', 20)
     pdf.cell(w=0, h=20, txt="Dividend Information", ln=1,align='C')
-    image_list,dividend_analysis = dividend_history_analysis(symbol,save_plots=True,show_fig_only=False)
-    for img in image_list:
-        pdf.image(img, 
-            x = None, y = None, w = 200, h = 0, type = 'PNG')
-        pdf.ln(ch*2)     
+    try:
+        image_list,dividend_analysis = dividend_history_analysis(symbol,save_plots=True,show_fig_only=False)
+        for img in image_list:
+            pdf.image(img, 
+                x = None, y = None, w = 190, h = 0, type = 'PNG')
+            pdf.ln(ch*2)     
 
-    pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(w=0, h=5, txt=dividend_analysis)
+        pdf.set_font('Arial', '', 12)
+        pdf.multi_cell(w=0, h=5, txt=dividend_analysis)
 
+    except:
+        pdf.set_font('Arial', '', 12)
+        pdf.multi_cell(w=0, h=5, txt="No iformation Available")
     directory='PDFs'
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -79,5 +83,5 @@ def info_to_pdf(df,symbol,index_symbol='NS'):
 
 if __name__=="__main__":
     symbol='VEDL'
-    df = company_info_to_table(symbol)
-    info_to_pdf(df,symbol)
+    info_data = company_info_to_table(symbol)
+    info_to_pdf(info_data,symbol)
