@@ -50,7 +50,7 @@ def get_info(info_of,symbol):
     temp_df=equity_df[equity_df['SYMBOL']==symbol]
     if temp_df.shape[0]!=0:
         info = temp_df[info_of].values[0]
-        print(f'{info_of} of {symbol} is : {info}')
+        # print(f'{info_of} of {symbol} is : {info}')
         return info
     else:
         print(f'{info_of} Data not Found for {symbol}')
