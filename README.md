@@ -14,8 +14,9 @@ and activate the virtual environment
 Install the required libraries using 
 > pip install -r requirements.txt
 
+The main file here is stock_update file
 run the scripts using :
-> python3 script_name.py
+> python3 stock_update.py
 
 
 #### Explanation for stock_update.py
