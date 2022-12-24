@@ -6,7 +6,7 @@ from dividend_analysis import dividend_history_analysis
 from data_to_pdf import info_to_pdf
 
 
-symbol='TECHM'
+symbol='TATAMOTORS'
 
 def stock_info(symbol,to_pdf=False,to_email=False,receiver_email=None):
     '''

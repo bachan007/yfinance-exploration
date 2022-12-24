@@ -9,7 +9,7 @@ from nse_listed_companies import get_info
 # df = pd.read_csv(os.path.join(os.path.abspath(os.getcwd()),'files/my_stocks_watch.csv'))
 
 # desired information list --> can be updated according to the requirements
-info_list = ['symbol','longName','currentPrice','fiftyTwoWeekHigh','fiftyTwoWeekLow','dayHigh','dayLow','fiveYearAvgDividendYield','sector','website','industry','category']
+info_list = ['symbol','longName','currentPrice','fiftyTwoWeekHigh','fiftyTwoWeekLow','dayHigh','dayLow','fiveYearAvgDividendYield','bookValue','sector','website','industry','category']
 # symbol='TECHM'
 
 def discount_percentage(fifty_two_week_high,price_today):

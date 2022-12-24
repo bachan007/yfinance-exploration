@@ -8,7 +8,7 @@ import numpy as np
 import os
 import random
 from nse_listed_companies import get_info, equity_df
-from Base import barplot
+from base_scripts import barplot
 
 import warnings
 warnings.filterwarnings('ignore')

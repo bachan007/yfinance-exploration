@@ -7,7 +7,7 @@ This file contains all the NSE listed companies information.
 import pandas as pd
 import numpy as np
 import os
-from Base import barplot
+from base_scripts import barplot
 
 equity_df = pd.read_csv(os.path.join(os.path.abspath(os.getcwd()),'files/EQUITY_L.csv'))
 
